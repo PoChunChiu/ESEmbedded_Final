@@ -44,8 +44,8 @@ void task2(void)
 }
 void task3(void)
 {
-	printf("[Task3] Start in unprivileged thread mode.\r\n\n");
-	printf("[Task3] Control: 0x%x \r\n", (unsigned int)read_ctrl());
+	printf("[Task3] Start Task3.\r\n\n");
+	//printf("[Task3] Control: 0x%x \r\n", (unsigned int)read_ctrl());
 	int a = 0,b = 1;
 	int c = a + b;
 	while(c>=0){
@@ -75,13 +75,13 @@ int main(void)
 	init_task(2, (uint32_t *)task2, user_stacks[2]+1024);
 	init_task(3, (uint32_t *)task3, user_stacks[3]+1024);
 
-	printf("[Kernel] Start in privileged thread mode.\r\n\n");
+	//printf("[Kernel] Start in privileged thread mode.\r\n\n");
 
-	printf("[Kernel] Setting systick...\r\n\n");
+	//printf("[Kernel] Setting systick...\r\n\n");
 	setup_systick(168e6 / 8 / 100); //10 ms
 
 	//start user task
-	printf("[Kernel] Switch to unprivileged thread mode & start user task0 with psp.\r\n\n");
+	//printf("[Kernel] Switch to unprivileged thread mode & start user task0 with psp.\r\n\n");
 	start_user((uint32_t *)task0, user_stacks[0]);
 
 	while (1) //should not go here
