@@ -5,7 +5,7 @@
 #include "usart.h"
 #include "asm_func.h"
 
-#define TASK_NUM 3
+#define TASK_NUM 4
 #define PSTACK_SIZE_WORDS 1024 //user stack size = 4 kB
 
 static uint32_t *psp_array[TASK_NUM];
@@ -21,28 +21,48 @@ void init_task(unsigned int task_id, uint32_t *task_addr, uint32_t *psp_init)
 
 void task0(void)
 {
-	printf("[Task0] Start in unprivileged thread mode.\r\n\n");
-	printf("[Task0] Control: 0x%x \r\n", (unsigned int)read_ctrl());
+	//printf("[Task0] Start in unprivileged thread mode.\r\n\n");
+	//printf("[Task0] Control: 0x%x \r\n", (unsigned int)read_ctrl());
 
 	blink(LED_BLUE); //should not return
 }
 
 void task1(void)
 {
-	printf("[Task1] Start in unprivileged thread mode.\r\n\n");
-	printf("[Task1] Control: 0x%x \r\n", (unsigned int)read_ctrl());
+	//printf("[Task1] Start in unprivileged thread mode.\r\n\n");
+	//printf("[Task1] Control: 0x%x \r\n", (unsigned int)read_ctrl());
 
 	blink(LED_GREEN); //should not return
 }
 
 void task2(void)
 {
-	printf("[Task2] Start in unprivileged thread mode.\r\n\n");
-	printf("[Task2] Control: 0x%x \r\n", (unsigned int)read_ctrl());
+	//printf("[Task2] Start in unprivileged thread mode.\r\n\n");
+	//printf("[Task2] Control: 0x%x \r\n", (unsigned int)read_ctrl());
 
 	blink(LED_ORANGE); //should not return
 }
-
+void task3(void)
+{
+	printf("[Task3] Start in unprivileged thread mode.\r\n\n");
+	printf("[Task3] Control: 0x%x \r\n", (unsigned int)read_ctrl());
+	int a = 0,b = 1;
+	int c = a + b;
+	while(c>=0){
+		printf("%d ",c);
+		c = a + b;
+		a = b;
+		b = c;
+		for(int i = 0;i<10000;i++);
+		if(c<0){
+			printf("\r\n");
+			for(int i = 0;i<10000;i++);
+			a=0;b=1;c=1;
+		}
+	}
+	printf("\r\n\n");
+	blink(LED_RED); //should not return
+}
 int main(void)
 {
 	init_usart1();
@@ -53,6 +73,7 @@ int main(void)
 	init_task(0, (uint32_t *)task0, user_stacks[0]+1024);
 	init_task(1, (uint32_t *)task1, user_stacks[1]+1024);
 	init_task(2, (uint32_t *)task2, user_stacks[2]+1024);
+	init_task(3, (uint32_t *)task3, user_stacks[3]+1024);
 
 	printf("[Kernel] Start in privileged thread mode.\r\n\n");
 
